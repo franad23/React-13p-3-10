@@ -1,0 +1,17 @@
+.citaContenedor {
+  border: 5px solid white;
+  border-radius: 5px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.datosCita {
+  display: flex;
+  justify-content: space-between;
+}
+
+.datosCita > div > h4 {
+  margin: 0;
+}
