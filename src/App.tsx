@@ -1,30 +1,83 @@
-import { useState } from "react";
-import "./App.css";
-import Formulario from "./components/formulario/formulario";
-import Table from "./components/tabla/Tabla";
-import type { DataPersona } from "./types/persona";
+import { useForm } from "react-hook-form";
+
+interface DatosForm {
+  name: string;
+  lastname: string;
+  age: string;
+}
 
 function App() {
-  const [personas, setPersonas] = useState<DataPersona[]>([]);
-  function submitForm(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    const formData = new FormData(e.currentTarget);
-
-    const data: DataPersona = {
-      lastname: formData.get("lastname") as string,
-      name: formData.get("name") as string,
-      age: Number(formData.get("age")),
-    };
-
-    setPersonas((prev) => [...prev, data]);
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<DatosForm>({
+    mode: "onSubmit",
+  });
 
   return (
-    <>
-      <Formulario submitForm={submitForm} />
-      <Table personas={personas} />
-    </>
+    <form
+      onSubmit={handleSubmit((data) => {
+        console.log("Datos válidos:", data);
+      })}
+    >
+      <div>
+        <input
+          type="text"
+          placeholder="Nombre"
+          {...register("name", {
+            required: "El nombre es obligatorio",
+          })}
+        />
+        {errors.name && (
+          <span style={{ color: "red" }}>{errors.name.message}</span>
+        )}
+      </div>
+
+      <div>
+        <input
+          type="text"
+          placeholder="Apellido"
+          {...register("lastname", {
+            required: "El apellido es obligatorio",
+            minLength: {
+              value: 2,
+              message: "El apellido debe tener al menos 2 caracteres",
+            },
+            maxLength: {
+              value: 50,
+              message: "El apellido no debe tener mas de 50 caracteres",
+            },
+          })}
+        />
+        {errors.lastname && (
+          <span style={{ color: "red" }}>{errors.lastname.message}</span>
+        )}
+      </div>
+
+      <div>
+        <input
+          type="number"
+          placeholder="Edad"
+          {...register("age", {
+            required: "La edad es obligatoria",
+            min: {
+              value: 18,
+              message: "Tenes que ser mayor de edad",
+            },
+            max: {
+              value: 150,
+              message: "Tenes que estar vivo",
+            },
+          })}
+        />
+        {errors.age && (
+          <span style={{ color: "blue" }}>{errors.age.message}</span>
+        )}
+      </div>
+
+      <button type="submit">Enviar</button>
+    </form>
   );
 }
 

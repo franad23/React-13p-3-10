@@ -1,8 +1,8 @@
-function Formulario({
-  submitForm,
-}: {
+interface FormularioProps {
   submitForm: (e: React.FormEvent<HTMLFormElement>) => void;
-}) {
+}
+
+function Formulario({ submitForm }: FormularioProps) {
   return (
     <form onSubmit={(e) => submitForm(e)}>
       <label>Nombre:</label>
